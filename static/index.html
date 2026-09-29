@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>职场效率助手 · 一键周报 + PPT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部 -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <h1>职场效率助手</h1>
+          <p>把乱糟糟的想法，变成专业的工作成果</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab 切换 -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="weekly">📝 一键周报</button>
+      <button class="tab" data-tab="ppt">📊 生成 PPT</button>
+    </nav>
+
+    <!-- 周报面板 -->
+    <section class="panel active" id="panel-weekly">
+      <div class="card">
+        <h2>把零散的工作记录，变成规范周报</h2>
+        <p class="hint">把你本周做的、遇到的、计划的事随便写下来，越乱越随意越好。</p>
+        <textarea id="weekly-input" rows="8"
+          placeholder="示例：这周做了用户登录的接口，联调遇到token过期问题，最后解决了。还参加了需求评审会。下周要做支付模块。另外帮同事review了代码。"></textarea>
+        <div class="actions">
+          <button class="btn primary" id="weekly-btn" onclick="generateWeekly()">✨ 生成周报</button>
+          <button class="btn ghost" id="weekly-copy" onclick="copyResult('weekly-output')">📋 复制结果</button>
+        </div>
+        <div id="weekly-output" class="output"></div>
+      </div>
+    </section>
+
+    <!-- PPT 面板 -->
+    <section class="panel" id="panel-ppt">
+      <div class="card">
+        <h2>输入主题，一键生成 PPT</h2>
+        <p class="hint">输入你的 PPT 主题，AI 会生成完整大纲，还能下载真实 PPT 文件。</p>
+        <div class="row">
+          <input id="ppt-topic" type="text" placeholder="例如：2026届校招生智能体开发活动参赛作品介绍">
+          <select id="ppt-pages">
+            <option value="4">约4页</option>
+            <option value="6" selected>约6页</option>
+            <option value="8">约8页</option>
+            <option value="10">约10页</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="ppt-btn" onclick="generatePpt()">🎨 生成 PPT 大纲</button>
+          <button class="btn download" id="ppt-download" onclick="downloadPpt()" disabled>⬇️ 下载 PPT 文件</button>
+        </div>
+        <div id="ppt-output" class="output"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>职场效率助手 · 让每个职场新人都少走弯路</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

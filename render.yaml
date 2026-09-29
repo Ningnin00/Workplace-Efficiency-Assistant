@@ -1,0 +1,14 @@
+# Render 部署配置（免费版）
+# 部署方法：把 webapp 文件夹上传到 GitHub，然后在 Render 上 New > Web Service
+# 选择该仓库即可自动识别此配置
+
+services:
+  - type: web
+    name: zhinengti-assistant
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    plan: free
+    envVars:
+      - key: DEEPSEEK_API_KEY
+        sync: false   # 部署时在 Render 后台手动填写你的 API Key
