@@ -10,14 +10,12 @@
 |------|------|------|
 | GitHub 账号 | 代码已上传到 `Ningnin00/Workplace-Efficiency-Assistant` | ✅ 已完成 |
 | Render 账号 | 去 render.com 免费注册，可用 GitHub 登录 | ⬜ 待做 |
-| 公司大模型 API | Codex/xfusion 的接口地址、API Key、模型名 | ⬜ 待确认 |
+| 公司大模型 API | Codex/xfusion 的接口地址、API Key、模型名 | ✅ 已确认 |
 
-你已提供：
+已确认配置：
+- `LLM_API_URL`：`https://ai-gateway.xfusion.com`
+- `LLM_MODEL`：`xfusion:gpt-5.5`
 - `LLM_API_KEY`：公司 Codex API Key（请只填到 Render 环境变量，不要写进代码）
-- `LLM_MODEL`：`gpt-5.5`
-
-还需要确认：
-- `LLM_API_URL`：公司 OpenAI 兼容接口地址，例如 `https://xxx/v1/chat/completions`
 
 ---
 
@@ -61,9 +59,9 @@ Render 会自动读取仓库中的 `render.yaml`，通常不用手动改。
 
 | Key | Value | 说明 |
 |---|---|---|
-| `LLM_API_URL` | `https://你的公司网关/v1/chat/completions` | 公司 Codex/xfusion OpenAI 兼容接口地址 |
+| `LLM_API_URL` | `https://ai-gateway.xfusion.com` | xfusion Base URL，代码会自动补 `/v1/chat/completions` |
 | `LLM_API_KEY` | `sk-你的公司Key` | 公司 API Key |
-| `LLM_MODEL` | `gpt-5.5` | 模型名 |
+| `LLM_MODEL` | `xfusion:gpt-5.5` | 模型名 |
 | `VERIFY_SSL` | `true` | Render 云端通常不用关闭证书校验 |
 
 > 本地公司网络如果出现 SSL 证书拦截，可设 `VERIFY_SSL=false`；Render 上一般保持 `true`。
@@ -93,7 +91,7 @@ https://zhinengti-assistant.onrender.com
 ## 常见问题
 
 ### Q1：`LLM_API_URL` 填什么？
-填公司提供的 OpenAI 兼容聊天接口地址，通常以 `/v1/chat/completions` 结尾。你需要向公司平台/文档确认。
+填 `https://ai-gateway.xfusion.com` 即可。代码会自动补全为 `/v1/chat/completions` 调用路径。
 
 ### Q2：为什么不把 Key 写进代码？
 因为 GitHub 仓库可能公开，API Key 写进代码会泄露。正确做法是填到 Render 的环境变量里。

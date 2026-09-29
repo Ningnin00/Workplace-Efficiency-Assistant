@@ -11,10 +11,10 @@ services:
     plan: free
     envVars:
       - key: LLM_API_URL
-        sync: false   # OpenAI 兼容接口地址，如 https://xxx/v1/chat/completions
+        sync: false   # xfusion Base URL，如 https://ai-gateway.xfusion.com
       - key: LLM_API_KEY
         sync: false   # 公司 Codex/xfusion API Key
       - key: LLM_MODEL
-        value: gpt-5.5
+        value: xfusion:gpt-5.5
       - key: VERIFY_SSL
         value: "true"

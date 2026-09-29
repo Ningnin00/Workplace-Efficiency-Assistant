@@ -20,16 +20,16 @@ pip install -r requirements.txt
 
 | 环境变量 | 示例 | 说明 |
 |---|---|---|
-| `LLM_API_URL` | `https://你的公司网关/v1/chat/completions` | 公司 Codex/xfusion 接口地址 |
+| `LLM_API_URL` | `https://ai-gateway.xfusion.com` | xfusion Base URL，代码会自动补 `/v1/chat/completions` |
 | `LLM_API_KEY` | `sk-xxxx` | API Key |
-| `LLM_MODEL` | `gpt-5.5` | 模型名 |
+| `LLM_MODEL` | `xfusion:gpt-5.5` | 模型名 |
 | `VERIFY_SSL` | `true` / `false` | 本地遇到证书拦截可设为 `false` |
 
 PowerShell 示例：
 ```powershell
-$env:LLM_API_URL="https://你的公司网关/v1/chat/completions"
+$env:LLM_API_URL="https://ai-gateway.xfusion.com"
 $env:LLM_API_KEY="sk-你的Key"
-$env:LLM_MODEL="gpt-5.5"
+$env:LLM_MODEL="xfusion:gpt-5.5"
 $env:VERIFY_SSL="false"
 python app.py
 ```
@@ -60,9 +60,9 @@ python app.py
 
 | Key | Value |
 |---|---|
-| `LLM_API_URL` | 公司提供的 OpenAI 兼容接口地址 |
+| `LLM_API_URL` | `https://ai-gateway.xfusion.com` |
 | `LLM_API_KEY` | 公司提供的 Codex/xfusion API Key |
-| `LLM_MODEL` | `gpt-5.5` |
+| `LLM_MODEL` | `xfusion:gpt-5.5` |
 | `VERIFY_SSL` | Render 上一般填 `true` |
 
 ### 步骤 4：获得公网网址

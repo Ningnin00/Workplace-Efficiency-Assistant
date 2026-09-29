@@ -35,8 +35,21 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # - DeepSeek 备用：也可继续配置 DEEPSEEK_API_KEY
 LLM_API_URL = os.environ.get("LLM_API_URL", os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions"))
 LLM_API_KEY = os.environ.get("LLM_API_KEY", os.environ.get("DEEPSEEK_API_KEY", ""))
-MODEL = os.environ.get("LLM_MODEL", os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"))
+MODEL = os.environ.get("LLM_MODEL", os.environ.get("DEEPSEEK_MODEL", "xfusion:gpt-5.5"))
 VERIFY_SSL = os.environ.get("VERIFY_SSL", "true").lower() not in ("0", "false", "no")
+
+
+def normalize_chat_url(url):
+    """兼容 Base URL 和完整 chat/completions URL。"""
+    url = (url or "").rstrip("/")
+    if url.endswith("/chat/completions"):
+        return url
+    if url.endswith("/v1"):
+        return f"{url}/chat/completions"
+    return f"{url}/v1/chat/completions"
+
+
+LLM_CHAT_URL = normalize_chat_url(LLM_API_URL)
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
@@ -118,7 +131,7 @@ def call_llm(system_prompt, user_content):
         "stream": False,
     }
     try:
-        resp = requests.post(LLM_API_URL, headers=headers, json=payload,
+        resp = requests.post(LLM_CHAT_URL, headers=headers, json=payload,
                              timeout=60, verify=VERIFY_SSL)
         if resp.status_code != 200:
             return None, f"API 返回错误 {resp.status_code}: {resp.text[:200]}"
