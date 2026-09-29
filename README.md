@@ -15,14 +15,26 @@
 pip install -r requirements.txt
 ```
 
-### 2. 配置 DeepSeek API Key
-编辑 `app.py` 顶部，把：
-```python
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "在这里填入你的_API_Key")
-```
-改成你的 Key（也可以设置环境变量 `DEEPSEEK_API_KEY`）。
+### 2. 配置大模型 API
+本项目使用 **OpenAI 兼容 Chat Completions 接口**。请配置环境变量：
 
-> 去 https://platform.deepseek.com 注册获取 API Key。
+| 环境变量 | 示例 | 说明 |
+|---|---|---|
+| `LLM_API_URL` | `https://你的公司网关/v1/chat/completions` | 公司 Codex/xfusion 接口地址 |
+| `LLM_API_KEY` | `sk-xxxx` | API Key |
+| `LLM_MODEL` | `gpt-5.5` | 模型名 |
+| `VERIFY_SSL` | `true` / `false` | 本地遇到证书拦截可设为 `false` |
+
+PowerShell 示例：
+```powershell
+$env:LLM_API_URL="https://你的公司网关/v1/chat/completions"
+$env:LLM_API_KEY="sk-你的Key"
+$env:LLM_MODEL="gpt-5.5"
+$env:VERIFY_SSL="false"
+python app.py
+```
+
+> 注意：不要把 API Key 写进代码或提交到 GitHub。
 
 ### 3. 启动
 ```bash
@@ -34,30 +46,28 @@ python app.py
 
 ## 二、部署到公网（让别人复制网址就能用）⭐ 推荐
 
-> 本地网络受限时，推荐用 **Render** 免费部署，部署后得到一个公网 URL。
-
-### 步骤 1：把代码上传到 GitHub
-1. 在 GitHub 新建一个仓库
-2. 把 `webapp` 文件夹里的内容上传（`app.py`、`requirements.txt`、`render.yaml`、`Procfile`、`static/`）
+### 步骤 1：代码已上传到 GitHub
+仓库：`Ningnin00/Workplace-Efficiency-Assistant`
 
 ### 步骤 2：在 Render 创建 Web Service
-1. 打开 https://render.com 注册账号（免费）
+1. 打开 https://render.com 注册账号
 2. 点击 **New +** → **Web Service**
-3. 连接你的 GitHub 仓库，选择它
-4. Render 会自动读取 `render.yaml` 配置
+3. 连接 GitHub 仓库，选择 `Workplace-Efficiency-Assistant`
+4. Render 会自动读取 `render.yaml`
 
-### 步骤 3：填写 API Key
-1. 在服务设置里找到 **Environment** → **Environment Variables**
-2. 添加变量：`DEEPSEEK_API_KEY` = 你的 DeepSeek Key
-3. 保存，Render 会自动部署
+### 步骤 3：填写环境变量
+在 Render 服务的 **Environment Variables** 添加：
+
+| Key | Value |
+|---|---|
+| `LLM_API_URL` | 公司提供的 OpenAI 兼容接口地址 |
+| `LLM_API_KEY` | 公司提供的 Codex/xfusion API Key |
+| `LLM_MODEL` | `gpt-5.5` |
+| `VERIFY_SSL` | Render 上一般填 `true` |
 
 ### 步骤 4：获得公网网址
-- 部署完成后，Render 会给一个 `https://你的服务名.onrender.com` 的网址
-- **把这个网址发给同学，他们打开就能用你的智能体了** 🎉
-
-> 免费版注意事项：
-> - 免费实例闲置 15 分钟会休眠，第一次访问会慢几秒（会自动唤醒）
-> - 每月有免费额度，个人演示完全够用
+部署完成后，Render 会给一个 `https://你的服务名.onrender.com` 的网址。
+把这个网址发给同学，他们打开就能用你的智能体。
 
 ---
 

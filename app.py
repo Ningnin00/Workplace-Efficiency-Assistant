@@ -18,6 +18,7 @@ import os
 import json
 import re
 import io
+import urllib3
 from flask import Flask, request, jsonify, send_file, send_from_directory
 import requests
 from pptx import Presentation
@@ -25,11 +26,17 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 
+# 关闭 SSL 警告（网络环境存在证书拦截时使用）
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 # ======================= 配置 =======================
-# 在这里填入你的 DeepSeek API Key（或设置环境变量 DEEPSEEK_API_KEY）
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "在这里填入你的_API_Key")
-DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
-MODEL = "deepseek-chat"
+# 通用 OpenAI 兼容接口配置：
+# - 公司 Codex / xfusion：在部署平台配置 LLM_API_URL、LLM_API_KEY、LLM_MODEL
+# - DeepSeek 备用：也可继续配置 DEEPSEEK_API_KEY
+LLM_API_URL = os.environ.get("LLM_API_URL", os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions"))
+LLM_API_KEY = os.environ.get("LLM_API_KEY", os.environ.get("DEEPSEEK_API_KEY", ""))
+MODEL = os.environ.get("LLM_MODEL", os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"))
+VERIFY_SSL = os.environ.get("VERIFY_SSL", "true").lower() not in ("0", "false", "no")
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
@@ -91,14 +98,14 @@ PPT_SYSTEM = """你是「职场效率助手」的 PPT 策划专家，帮用户�
 """
 
 
-# ======================= DeepSeek 调用 =======================
-def call_deepseek(system_prompt, user_content):
-    """调用 DeepSeek API，返回 (文本, 错误信息)"""
-    if "在这里填入" in DEEPSEEK_API_KEY or not DEEPSEEK_API_KEY:
-        return None, "未配置 DeepSeek API Key，请在 app.py 顶部填入你的 Key"
+# ======================= 大模型调用 =======================
+def call_llm(system_prompt, user_content):
+    """调用 OpenAI 兼容大模型 API，返回 (文本, 错误信息)"""
+    if not LLM_API_KEY:
+        return None, "未配置 API Key，请在环境变量中设置 LLM_API_KEY"
 
     headers = {
-        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+        "Authorization": f"Bearer {LLM_API_KEY}",
         "Content-Type": "application/json",
     }
     payload = {
@@ -111,7 +118,8 @@ def call_deepseek(system_prompt, user_content):
         "stream": False,
     }
     try:
-        resp = requests.post(DEEPSEEK_API_URL, headers=headers, json=payload, timeout=60)
+        resp = requests.post(LLM_API_URL, headers=headers, json=payload,
+                             timeout=60, verify=VERIFY_SSL)
         if resp.status_code != 200:
             return None, f"API 返回错误 {resp.status_code}: {resp.text[:200]}"
         data = resp.json()
@@ -248,7 +256,7 @@ def api_weekly():
     content = (data.get("content") or "").strip()
     if not content:
         return jsonify({"ok": False, "error": "请输入你的工作记录"})
-    text, err = call_deepseek(WEEKLY_SYSTEM, content)
+    text, err = call_llm(WEEKLY_SYSTEM, content)
     if err:
         return jsonify({"ok": False, "error": err})
     return jsonify({"ok": True, "result": text})
@@ -262,7 +270,7 @@ def api_ppt():
     if not topic:
         return jsonify({"ok": False, "error": "请输入 PPT 主题"})
     prompt = f"主题：{topic}，大约{pages}页左右"
-    text, err = call_deepseek(PPT_SYSTEM, prompt)
+    text, err = call_llm(PPT_SYSTEM, prompt)
     if err:
         return jsonify({"ok": False, "error": err})
     outline = extract_json(text)
