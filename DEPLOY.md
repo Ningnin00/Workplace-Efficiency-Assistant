@@ -14,7 +14,7 @@
 
 已确认配置：
 - `LLM_API_URL`：`https://ai-gateway.xfusion.com`
-- `LLM_MODEL`：`xfusion:gpt-5.5`
+- `LLM_MODEL`：`gpt-5.4`
 - `LLM_API_KEY`：公司 Codex API Key（请只填到 Render 环境变量，不要写进代码）
 
 ---
@@ -61,7 +61,7 @@ Render 会自动读取仓库中的 `render.yaml`，通常不用手动改。
 |---|---|---|
 | `LLM_API_URL` | `https://ai-gateway.xfusion.com` | xfusion Base URL，代码会自动补 `/v1/chat/completions` |
 | `LLM_API_KEY` | `sk-你的公司Key` | 公司 API Key |
-| `LLM_MODEL` | `xfusion:gpt-5.5` | 模型名 |
+| `LLM_MODEL` | `gpt-5.4` | 模型名 |
 | `VERIFY_SSL` | `true` | Render 云端通常不用关闭证书校验 |
 
 > 本地公司网络如果出现 SSL 证书拦截，可设 `VERIFY_SSL=false`；Render 上一般保持 `true`。

@@ -15,6 +15,6 @@ services:
       - key: LLM_API_KEY
         sync: false   # 公司 Codex/xfusion API Key
       - key: LLM_MODEL
-        value: xfusion:gpt-5.5
+        value: gpt-5.4
       - key: VERIFY_SSL
         value: "true"

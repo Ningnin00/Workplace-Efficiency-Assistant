@@ -7,63 +7,110 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
-    <!-- 顶部 -->
-    <header class="header">
-      <div class="logo">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <div class="app-shell">
+    <header class="hero">
+      <div class="brand">
         <div class="logo-icon">⚡</div>
         <div>
           <h1>职场效率助手</h1>
-          <p>把乱糟糟的想法，变成专业的工作成果</p>
+          <p>把零散记录整理成专业周报，把一个主题变成可下载 PPT</p>
         </div>
+      </div>
+      <div class="hero-badges">
+        <span>周报生成</span>
+        <span>PPT 大纲</span>
+        <span>文件下载</span>
       </div>
     </header>
 
-    <!-- Tab 切换 -->
-    <nav class="tabs">
-      <button class="tab active" data-tab="weekly">📝 一键周报</button>
-      <button class="tab" data-tab="ppt">📊 生成 PPT</button>
-    </nav>
+    <main class="layout">
+      <section class="workspace">
+        <nav class="tabs">
+          <button class="tab active" data-tab="weekly">一键周报</button>
+          <button class="tab" data-tab="ppt">生成 PPT</button>
+        </nav>
 
-    <!-- 周报面板 -->
-    <section class="panel active" id="panel-weekly">
-      <div class="card">
-        <h2>把零散的工作记录，变成规范周报</h2>
-        <p class="hint">把你本周做的、遇到的、计划的事随便写下来，越乱越随意越好。</p>
-        <textarea id="weekly-input" rows="8"
-          placeholder="示例：这周做了用户登录的接口，联调遇到token过期问题，最后解决了。还参加了需求评审会。下周要做支付模块。另外帮同事review了代码。"></textarea>
-        <div class="actions">
-          <button class="btn primary" id="weekly-btn" onclick="generateWeekly()">✨ 生成周报</button>
-          <button class="btn ghost" id="weekly-copy" onclick="copyResult('weekly-output')">📋 复制结果</button>
-        </div>
-        <div id="weekly-output" class="output"></div>
-      </div>
-    </section>
+        <section class="panel active" id="panel-weekly">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h2>把流水账变成规范周报</h2>
+                <p class="hint">随便输入本周做了什么、遇到什么问题、下周准备做什么。</p>
+              </div>
+              <span class="pill">适合新人汇报</span>
+            </div>
 
-    <!-- PPT 面板 -->
-    <section class="panel" id="panel-ppt">
-      <div class="card">
-        <h2>输入主题，一键生成 PPT</h2>
-        <p class="hint">输入你的 PPT 主题，AI 会生成完整大纲，还能下载真实 PPT 文件。</p>
-        <div class="row">
-          <input id="ppt-topic" type="text" placeholder="例如：2026届校招生智能体开发活动参赛作品介绍">
-          <select id="ppt-pages">
-            <option value="4">约4页</option>
-            <option value="6" selected>约6页</option>
-            <option value="8">约8页</option>
-            <option value="10">约10页</option>
-          </select>
+            <div class="template-row">
+              <button onclick="applyWeeklyTemplate('dev')">研发周报</button>
+              <button onclick="applyWeeklyTemplate('project')">项目推进</button>
+              <button onclick="applyWeeklyTemplate('study')">学习总结</button>
+              <button onclick="clearWeeklyInput()">清空</button>
+            </div>
+
+            <textarea id="weekly-input" rows="8" oninput="updateCounter()" placeholder="示例：这周做了用户登录接口，联调遇到 token 过期问题，最后修复了。参加了需求评审，下周做支付模块，还帮同事 review 代码。"></textarea>
+            <div class="meta-line"><span id="weekly-counter">0 字</span><span>建议 30 字以上，效果更好</span></div>
+
+            <div class="actions">
+              <button class="btn primary" id="weekly-btn" onclick="generateWeekly()">生成周报</button>
+              <button class="btn ghost" id="weekly-copy" onclick="copyResult('weekly-output')">复制结果</button>
+            </div>
+            <div id="weekly-output" class="output"></div>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-ppt">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h2>输入主题，一键生成 PPT</h2>
+                <p class="hint">AI 会生成结构化大纲，并支持下载真实 .pptx 文件。</p>
+              </div>
+              <span class="pill">演示加分项</span>
+            </div>
+
+            <div class="template-row">
+              <button onclick="applyPptTemplate('智能体参赛作品介绍')">参赛介绍</button>
+              <button onclick="applyPptTemplate('项目阶段性进展汇报')">项目汇报</button>
+              <button onclick="applyPptTemplate('新人入职学习总结')">学习总结</button>
+              <button onclick="applyPptTemplate('AI 工具提效方案')">提效方案</button>
+            </div>
+
+            <div class="row">
+              <input id="ppt-topic" type="text" placeholder="例如：2026届校招生智能体开发活动参赛作品介绍">
+              <select id="ppt-pages">
+                <option value="4">约4页</option>
+                <option value="6" selected>约6页</option>
+                <option value="8">约8页</option>
+                <option value="10">约10页</option>
+              </select>
+            </div>
+            <div class="actions">
+              <button class="btn primary" id="ppt-btn" onclick="generatePpt()">生成 PPT 大纲</button>
+              <button class="btn download" id="ppt-download" onclick="downloadPpt()" disabled>下载 PPT 文件</button>
+              <button class="btn ghost" onclick="copyResult('ppt-output')">复制大纲</button>
+            </div>
+            <div id="ppt-output" class="output"></div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="history-card">
+        <div class="history-head">
+          <div>
+            <h3>历史记录</h3>
+            <p>保存在本机浏览器</p>
+          </div>
+          <button class="link-btn" onclick="clearHistory()">清空</button>
         </div>
-        <div class="actions">
-          <button class="btn primary" id="ppt-btn" onclick="generatePpt()">🎨 生成 PPT 大纲</button>
-          <button class="btn download" id="ppt-download" onclick="downloadPpt()" disabled>⬇️ 下载 PPT 文件</button>
-        </div>
-        <div id="ppt-output" class="output"></div>
-      </div>
-    </section>
+        <div id="history-list" class="history-list"></div>
+      </aside>
+    </main>
 
     <footer class="footer">
-      <p>职场效率助手 · 让每个职场新人都少走弯路</p>
+      职场效率助手 · 让每个职场新人都少走弯路
     </footer>
   </div>
 

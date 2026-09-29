@@ -33,9 +33,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # 通用 OpenAI 兼容接口配置：
 # - 公司 Codex / xfusion：在部署平台配置 LLM_API_URL、LLM_API_KEY、LLM_MODEL
 # - DeepSeek 备用：也可继续配置 DEEPSEEK_API_KEY
-LLM_API_URL = os.environ.get("LLM_API_URL", os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions"))
+LLM_API_URL = os.environ.get("LLM_API_URL", os.environ.get("DEEPSEEK_API_URL", "https://ai-gateway.xfusion.com"))
 LLM_API_KEY = os.environ.get("LLM_API_KEY", os.environ.get("DEEPSEEK_API_KEY", ""))
-MODEL = os.environ.get("LLM_MODEL", os.environ.get("DEEPSEEK_MODEL", "xfusion:gpt-5.5"))
+MODEL = os.environ.get("LLM_MODEL", os.environ.get("DEEPSEEK_MODEL", "DeepSeek-V4-Flash"))
 VERIFY_SSL = os.environ.get("VERIFY_SSL", "true").lower() not in ("0", "false", "no")
 
 
